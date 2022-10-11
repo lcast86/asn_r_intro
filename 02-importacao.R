@@ -1,5 +1,5 @@
 # Pacotes -----------------------------------------------------------------
-
+2+2
 # Para instalar pacotes
 
 install.packages("tidyverse")
@@ -10,17 +10,18 @@ install.packages(c("skimr", "readxl", "writexl",
 # Para carregar pacotes
 
 library(tidyverse)
-library(dplyr)
+library(dplyr) ##ao carregar as bibliotecas, todos ficam disponiveis
 
-# Também é possível acessar as funções usando ::
+# Tamb?m ? poss?vel acessar as fun??es usando ::
 
 dplyr::select()
+##usar isso p garantir que nao vai usar funcao errada que tenha o mesmo nome em mais de um pct
 
 
 
-# Caminhos até o arquivo --------------------------------------------------
+# Caminhos at? o arquivo --------------------------------------------------
 
-# Diretório de trabalho
+# Diret?rio de trabalho
 getwd()
 # setwd("dados/")
 
@@ -30,7 +31,7 @@ getwd()
 # Caminhos relativos
 "dados/tb_candidatura.csv"
 
-# dica de navegação entre as aspas
+# dica de navega??o entre as aspas
 ""
 
 # Tibbles -----------------------------------------------------------------
@@ -44,12 +45,12 @@ as_tibble(airquality)
 # Lendo arquivos de texto -------------------------------------------------
 
 library(tidyverse)
-# CSV, separado por ponto e vírgula
+# CSV, separado por ponto e v?rgula
 tb_candidatura_csv <- read_csv2("dados/tb_candidatura.csv")
 
 # encoding
-# Natação UTF8
-# NataÃo!Â latin1
+# Nata??o UTF8
+# Nata?o!? latin1
 tb_candidatura_csv <- read_csv2(
   file = "dados/tb_candidatura.csv",
   locale = locale(encoding = "UTF-8")
@@ -61,7 +62,7 @@ tb_candidatura_txt <- read_delim(file = "dados/tb_candidatura.csv", delim = ";")
 # direto da internet
 imdb_csv <- read_csv("https://raw.githubusercontent.com/curso-r/202005-r4ds-1/master/dados/imdb.csv")
 
-# (mostrar navegação de importação do RStudio)
+# (mostrar navega??o de importa??o do RStudio)
 
 # Lendo arquivos do Excel -------------------------------------------------
 
@@ -84,7 +85,7 @@ imdb_spss <- read_sav("https://github.com/curso-r/202005-r4ds-1/blob/master/dado
 
 # Gravando dados ----------------------------------------------------------
 
-# As funções iniciam com 'write'
+# As fun??es iniciam com 'write'
 
 # CSV
 write.csv(tb_candidatura_csv, file = "tb_candidatura_athos.csv")
@@ -100,8 +101,8 @@ write_xlsx(tb_candidatura_csv, path = "dados/tb_candidatura_camila.xlsx")
 
 # O formato rds -----------------------------------------------------------
 
-# .rds são arquivos binários do R
-# Você pode salvar qualquer objeto do R em formato .rds
+# .rds s?o arquivos bin?rios do R
+# Voc? pode salvar qualquer objeto do R em formato .rds
 
 write_rds(tb_candidatura_csv, file = "dados/tb_candidatura.rds")
 tb_candidatura_rds <- read_rds("dados/tb_candidatura.rds")
@@ -109,14 +110,14 @@ tb_candidatura_rds <- read_rds("dados/tb_candidatura.rds")
 
 
 
-# Conexão com banco de dados SQL ----------------------------------------
+# Conex?o com banco de dados SQL ----------------------------------------
 
 library(RSQLite)
 library(dplyr)
 library(dbplyr)
 library(DBI)
 
-# Fazendo conexão com banco de dados
+# Fazendo conex?o com banco de dados
 conexao <- dbConnect(SQLite(), "dados/imdb.db")
 dbListTables(conexao)
 
@@ -128,30 +129,30 @@ dbListTables(conexao)
 imdb_sqlite <- tbl(conexao, "imdb")
 imdb_sqlite
 
-# Criando uma tabela usando instruções em SQL -------------
+# Criando uma tabela usando instru??es em SQL -------------
 instrucao <- sql("SELECT titulo, diretor FROM imdb WHERE ano = 1940")
 imdb_select <- tbl(conexao, instrucao)
 
-# O que tem por trás
+# O que tem por tr?s
 show_query(imdb_select)
 
-# Trazer para a memória
+# Trazer para a mem?ria
 imdb_no_r <- collect(imdb_sqlite)
 
 
-# Criando uma tabela usando instruções em R ---------------
+# Criando uma tabela usando instru??es em R ---------------
 imdb_select_r <- imdb_sqlite %>%
   filter(ano == 1940) %>%
   select(titulo, diretor)
 
-# O que tem por trás
+# O que tem por tr?s
 show_query(imdb_select_r)
 
-# Trazer para a memória
+# Trazer para a mem?ria
 imdb_select_no_r <- collect(imdb_select)
 
 
-# Mais informações: db.rstudio.com
+# Mais informa??es: db.rstudio.com
 
 
 
