@@ -2,19 +2,20 @@
 
 library(dplyr)
 library(purrr)
+library(readr)
 
 
 # abrindo só um arquivo
-read_rds("data-raw/imdb_por_ano/imdb_1916.rds")
+read_rds("dados/imdb_por_ano/imdb_1916.rds")
 
 # criando um vetor dos arquivos por ano da base do imdb
 # com base R
-arquivos <- list.files(path = "data-raw/imdb_por_ano",
+arquivos <- list.files(path = "dados/imdb_por_ano",
                        pattern = ".rds$",
                        full.names = TRUE)
 
 # com o pacote fs
-arquivos_com_fs <- fs::dir_ls(path = "data-raw/imdb_por_ano", glob = "*.rds")
+arquivos_com_fs <- fs::dir_ls(path = "dados/imdb_por_ano", glob = "*.rds")
 
 
 # estrutura com purrr:
@@ -41,7 +42,7 @@ library(purrr)
 library(tidyr)
 library(ggplot2)
 
-imdb <- readr::read_rds("data/imdb.rds")
+imdb <- readr::read_rds("dados/imdb.rds")
 
 # nest
 # agrupar e fazer um nest  (aninhando pelo grupo) por ano
@@ -55,7 +56,7 @@ imdb_nest %>%
   unnest(cols = "data")
 
 # podemos manipular list-columns usando a
-# a funcão purrr::map()
+# a funcão map()
 
 # funcao para fazer o grafico!
 fazer_grafico_dispersao <- function(tab) {
@@ -72,7 +73,7 @@ imdb_graficos <- imdb %>%
   group_by(ano) %>%
   nest() %>%
   mutate(
-    grafico = purrr::map(data, fazer_grafico_dispersao)
+    grafico = map(data, fazer_grafico_dispersao)
   )
 
 # acessando os gráficos com base
@@ -216,12 +217,13 @@ map(textos, verifica_texto)
 
 library(purrr)
 library(dplyr)
+library(stringr)
 
 remotes::install_github("williamorim/brasileirao")
 brasileirao::matches
 
 calcular_pontos <- function(placar) {
-  gols <- stringr::str_split(placar, "x", simplify = TRUE)
+  gols <- str_split(placar, "x", simplify = TRUE)
   if (gols[1] > gols[2]) {
     return(3)
   } else if (gols[1] < gols[2]) {
@@ -236,22 +238,22 @@ calcular_pontos("2x0")
 calcular_pontos("1x7")
 
 brasileirao::matches %>%
-  dplyr::mutate(
-    pontos_casa = purrr::map_dbl(score, calcular_pontos)
+  mutate(
+    pontos_casa = map_dbl(score, calcular_pontos)
   )
 
 # Gols pro e gols contra
 
 brasileirao::matches %>%
-  dplyr::mutate(
-    pontos_casa = purrr::map_dbl(score, calcular_pontos),
-    gols_casa = purrr::map_dbl(
+  mutate(
+    pontos_casa = map_dbl(score, calcular_pontos),
+    gols_casa = map_dbl(
       score,
-      ~as.numeric(stringr::str_split(.x, "x", simplify = TRUE)[1])
+      ~as.numeric(str_split(.x, "x", simplify = TRUE)[1])
     ),
-    gols_visitante = purrr::map_dbl(
+    gols_visitante = map_dbl(
       score,
-      ~as.numeric(stringr::str_split(.x, "x", simplify = TRUE)[2])
+      ~as.numeric(str_split(.x, "x", simplify = TRUE)[2])
     )
   )
 
