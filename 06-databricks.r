@@ -34,7 +34,7 @@ spark_write_table(iris_spark, "iris")
 # COMMAND ----------
 
 # le a tabela no database (para a memoria do Spark)
-iris_do_database_spark = spark_read_table(sc, "iris")
+iris_do_database_spark = spark_read_table(sc, "iris") # ou tbl(sc, "iris")
 iris_do_database_spark
 
 # COMMAND ----------
