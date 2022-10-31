@@ -1,0 +1,86 @@
+---
+title: "Firms - exercicio extra"
+format:
+  html:
+    theme: default
+    toc: true
+    number-sections: true
+---
+
+
+# Imports
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(glue)
+f <- glue
+```
+
+# Data load
+
+```{r}
+sheet1 <- suppressMessages(readxl::read_excel("dados/firms.xlsx", sheet = 1)) 
+glimpse(sheet1)
+```
+
+# Exemplo de arrumacao dos dados
+
+Parte 1
+
+```{r}
+# sheet1 <- sheet1 %>% set_names(f("{names(sheet1)}_{sheet1[1,]}"))
+names(sheet1) <- f("{names(sheet1)}_{sheet1[1,]}")
+```
+
+Parte 2
+
+```{r}
+sheet1_pt1 <- sheet1 %>%
+  add_rownames() %>%
+  filter(rowname != 1) %>%
+  rename(firm = ...2) %>%
+  pivot_longer(c(-rowname, -firm))
+```
+Parte 3
+
+```{r}
+sheet1_pt2 <- sheet1_pt1 %>%
+  separate(name, into = c("feature", "year"), sep = "_") %>%
+  mutate(feature = feature %>% str_remove(fixed("...")) %>% str_remove("[0-9]+$"))
+```
+
+Parte 4
+
+```{r}
+sheet1_pt3 <- sheet1_pt2 %>%
+  pivot_wider(names_from = feature, values_from = value)
+```
+
+Parte 5
+
+```{r}
+sheet1_pt4 <- sheet1_pt3 %>%
+  mutate(across(c(-rowname, -firm, -year), as.numeric)) %>%
+  janitor::clean_names() %>%
+  mutate(
+    year_num = parse_number(year),
+    risk_being_passed = coalesce(nwp_m/gwp_m, 0)
+  )
+```
+
+Parte 6
+
+```{r}
+trend <- function(x) {
+  lmm <- lm(x ~ t, data = data.frame(t = 1:5, x = x) %>% filter_all(is.finite))
+  coefficients(lmm)[2]
+}
+
+sheet1_pt5 <- sheet1_pt4 %>%
+  group_by(firm)  %>%
+  summarise(
+    across(c(-rowname,-starts_with("year")), .fns = c("mean" = mean, "sd" = sd, "trend" = trend))
+  )
+```
+
+
