@@ -37,20 +37,13 @@ class(df)
 
 # COMMAND ----------
 
-# # Método 1
 # df['log_price'] = np.log( df['vlPrice'] )
-#
 # df['vlFreightLog'] = np.log( df['vlFreight']+1 )
 #
-# # Método 2
-# df = df.rename( columns={"log_price":"vlPriceLog"} )
-# df.rename( columns={"log_price":"vlPriceLog"}, inplace=True )
 
+# Jeito 1 de criar colunas novas
 
-
-# Metodo 1 
-
-# Metodo 2 
+# Jeito 2 de criar colunas novas
 
 
 # COMMAND ----------
@@ -161,10 +154,6 @@ df
 
 # df['idOrderItem'] = df['idOrderItem'].astype('float')
 # df.dtypes
-
-
-
-# COMMAND ----------
 
 
 
