@@ -95,7 +95,8 @@ olist_products_preabt = subquery %>%
     qtd_produtos_vendendo = n(),
     media_num_fotos_por_produto = sum(nrPhotos, na.rm = TRUE)/n(),
     .groups = "drop"
-  ) %>%
+  ) 
+
+olist_products_preabt %>%
   collect() %>%
-  arrange(desc(idSeller)) %>%
   display()
