@@ -85,22 +85,17 @@ order_items_preabt = order_items %>%
 # COMMAND ----------
 
 subquery = order_items_preabt %>%
-  distinct(idSeller, idProduct) %>%
-  inner_join(products, by = "idProduct")
-
+  select(idSeller, idProduct) %>%
+  inner_join(products, by = "idProduct") %>%
+  distinct() 
 
 olist_products_preabt = subquery %>%
   group_by(idSeller) %>%
   summarise(
     qtd_produtos_vendendo = n(),
-    media_num_fotos_por_produto = sum(nrPhotos)/n(),
+    media_num_fotos_por_produto = sum(nrPhotos, na.rm = TRUE)/n(),
     .groups = "drop"
-  )
-
-# COMMAND ----------
-
-olist_products_preabt
-
-# COMMAND ----------
-
-
+  ) %>%
+  collect() %>%
+  arrange(desc(idSeller)) %>%
+  display()
