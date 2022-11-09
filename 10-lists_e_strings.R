@@ -193,5 +193,5 @@ imdb_com_qtd_de_generos_unnested <- imdb_com_qtd_de_generos %>%
 imdb_com_qtd_de_generos_unnested
 
 
-
+# referencia: https://livro.curso-r.com/
 
